@@ -37,6 +37,7 @@
 start(_StartType, _StartArgs) ->
     SuperReq = record(application:get_env(?APP, super_req, undefined)),
     ok = register_auth_mod(SuperReq), ok = register_acl_mod(SuperReq),
+    emqttd_autosub_http:load(),
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 register_auth_mod(SuperReq) ->
@@ -51,6 +52,7 @@ register_acl_mod(SuperReq) ->
 prep_stop(State) ->
     emqttd_access_control:unregister_mod(acl, emqttd_acl_http),
     emqttd_access_control:unregister_mod(auth, emqttd_auth_http),
+    emqttd_autosub_http:unload(),
     State.
 
 stop(_State) ->
