@@ -67,6 +67,37 @@ File: etc/plugin.config
         {topic,    "%t"}
       ]}
     ]}
+
+    %%auto sub when client connected
+
+    {sub_req, [
+      {method, post},
+      {url, "http://172.16.7.242:7090/mqtt/sub"},
+      {params, [
+        {username, "%u"},
+        {clientid, "%c"}
+      ]}
+    ]},
+
+    %% off line, the host is the ip of the emqttd server, if needed config it
+
+    {offline_req, [
+      {method, post},
+      {url, "http://172.16.7.242:7090/mqtt/offline?host=172.16.7.14"},
+      {params, [
+        {clientid, "%c"}
+      ]}
+    ]},
+
+    %% after auto sub to do something, example: after sub send the offline message, etc.
+    {after_sub_req, [
+      {method, post},
+      {url, "http://172.16.7.242:7090/mqtt/aftersub"},
+      {params, [
+        {clientid, "%c"},
+        {topics, "%o"}
+      ]}
+    ]}
   ]}
 
 ].
